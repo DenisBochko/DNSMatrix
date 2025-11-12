@@ -207,12 +207,24 @@ services:
     image: nginx:1.27-alpine
     container_name: hackathon-frontend
     ports:
-      - "8081:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./frontend/dist:/usr/share/nginx/html:ro
       - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
     depends_on:
       - hackathon-back
+    networks:
+      - shared
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: hackathon-certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
     networks:
       - shared
 
