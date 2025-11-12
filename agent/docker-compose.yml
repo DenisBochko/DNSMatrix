@@ -1,0 +1,17 @@
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agent
+    volumes:
+      - ./config.docker.yml:/app/config.docker.yml
+    environment:
+      CONFIG_PATH: "/app/config.docker.yml"
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
+    name: my-shared-net

@@ -1,0 +1,13 @@
+app:
+  agent_id: "6d40a8b9-a135-4b67-b96b-0579c6ae0f76"
+  region: "GL"
+subscriber:
+  brokers:
+    - "broker:29092"
+  group_id: "1"
+  topic: "hosts-check-GL"
+  buffer_size: 1000
+publisher:
+  brokers:
+    - "broker:29092"
+  topic: "hosts-checked"

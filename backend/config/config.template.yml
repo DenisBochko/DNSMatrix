@@ -1,0 +1,97 @@
+app:
+  service_name: "hackathon-back"
+  version: 0.1.0
+log:
+  level: "debug"
+  format_json: false
+  rotation:
+    file: "./hackathon-back.log"
+    max_size: 10
+    max_backups: 3
+    max_age: 7
+database:
+  host: "127.0.0.1"
+  port: 5432
+  user: "admin"
+  password: "admin"
+  name: "hackathon-back"
+  ssl_mode: "disable"
+  max_conns: 10
+  min_conns: 2
+  migration:
+    path: "./migrations"
+    auto_apply: true
+redis:
+  enable: true
+  host: "127.0.0.1"
+  port: 6379
+  password: "admin"
+  db: 0
+http_server:
+  host: "127.0.0.1"
+  port: 8080
+  base_path: "/api"
+  timeout:
+    request: 50s
+    read: 30s
+    write: 30s
+    idle: 30s
+  cors:
+    enabled: true
+    allow_all_origins: true
+    allow_origins: [ ]
+    allow_methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "PATCH"
+      - "DELETE"
+      - "OPTIONS"
+    allow_headers:
+      - "Origin"
+      - "Content-Type"
+      - "Accept"
+      - "Authorization"
+    expose_headers:
+      - "Content-Length"
+    allow_credentials: true
+    max_age: 12h
+    allow_websockets: true
+    allow_files: true
+  jwt:
+    access_token_ttl: 20m
+    refresh_token_ttl: 43200m
+mailer:
+  host: "127.0.0.1"
+  port: 1025
+  username: ""
+  password: ""
+  from: "hackathon-back"
+  use_tls: false
+key:
+  public: "./ecdsa_public.pem"
+  private: "./ecdsa_private.pem"
+elastic:
+  addresses:
+    - "http://127.0.0.1:9200"
+  username: ""
+  password: ""
+  cloud_id: ""
+  api_key: ""
+  timeout: 5s
+kafka:
+  brokers:
+    - "127.0.0.1:9092"
+  subscriber:
+    name: "check-subscriber"
+    worker_count: 5
+    topic: "hosts-checked"
+    group_id: "1"
+  producer:
+    name: "check-publisher"
+    worker_count: 10
+    poll_interval: 10000ms
+    batch_size: 100
+geo:
+  geo_lite_country_path: "geobase/GeoLite2-Country.mmdb"
+  geo_lite_asn_path: "geobase/GeoLite2-ASN.mmdb"

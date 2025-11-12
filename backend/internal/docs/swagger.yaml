@@ -1,0 +1,1775 @@
+basePath: /api/
+definitions:
+  _ResponseWithData:
+    description: Общий ответ success/error, содержащий произвольные данные.
+    properties:
+      data:
+        description: Объект полезной нагрузки
+      status:
+        description: Результат запроса
+        type: string
+    type: object
+  _ResponseWithMessage:
+    description: Общий простой ответ, который передает только понятное для человека
+      сообщение.
+    properties:
+      message:
+        description: Человеко-читаемое сообщение
+        type: string
+      status:
+        description: Результат запроса
+        type: string
+    type: object
+  APIKey:
+    description: Модель API ключа пользователя.
+    properties:
+      created_at:
+        description: Дата создания
+        example: "2025-10-25T13:40:00Z"
+        format: date-time
+        type: string
+      expires_at:
+        description: Дата истечения (если задана)
+        example: "2025-11-25T13:40:00Z"
+        format: date-time
+        type: string
+      id:
+        description: ID ключа
+        example: 7b2aab2e-4d1f-45b5-90c5-4d5d4db5ef11
+        type: string
+      name:
+        description: Название ключа (для понимания)
+        example: mobile_app
+        type: string
+      revoked:
+        description: Отозван ли ключ
+        example: false
+        type: boolean
+      user_id:
+        description: ID пользователя
+        example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
+        type: string
+    type: object
+  APIKeyCreateRequest:
+    description: Запрос на создание API ключа.
+    properties:
+      name:
+        description: Имя ключа
+        example: partner_api
+        type: string
+      ttl_hours:
+        description: Время жизни в часах (0 — бессрочно)
+        example: 720
+        type: integer
+    required:
+    - name
+    type: object
+  APIKeyCreateResponse:
+    description: Ответ при создании API ключа.
+    properties:
+      api_key:
+        description: Секретный API ключ (показывается один раз)
+        example: KJHsT9W-2oP3sA1Q-LzM8fD4eC
+        type: string
+    type: object
+  APIKeyListResponse:
+    description: Ответ со списком ключей пользователя.
+    properties:
+      keys:
+        description: Список всех активных ключей
+        items:
+          $ref: '#/definitions/APIKey'
+        type: array
+    type: object
+  APIKeyRevokeRequest:
+    description: Запрос на отзыв API ключа.
+    properties:
+      id:
+        description: ID ключа
+        example: 7b2aab2e-4d1f-45b5-90c5-4d5d4db5ef11
+        type: string
+    required:
+    - id
+    type: object
+  Article:
+    description: модель статьи.
+    properties:
+      content_en:
+        description: Содержимое статьи на английском
+        example: Example
+        type: string
+      content_ru:
+        description: Содержимое статьи на русском
+        example: Пример
+        type: string
+      createdAt:
+        description: Timestamp создания аккаунта
+        example: "2006-01-02T15:04:05Z"
+        format: date-time
+        type: string
+      id:
+        description: ID статьи (UUID)
+        example: b4b03119-1290-44bc-b599-6a5e91d6611f
+        type: string
+      title_en:
+        description: Заголовок статьи на английском языке
+        example: Example
+        type: string
+      title_ru:
+        description: Заголовок статьи на русском языке
+        example: Пример
+        type: string
+      updatedAt:
+        description: Timestamp последнего обновления аккаунта
+        example: "2006-01-02T15:04:05Z"
+        format: date-time
+        type: string
+    required:
+    - content_en
+    - content_ru
+    - createdAt
+    - id
+    - title_en
+    - title_ru
+    - updatedAt
+    type: object
+  ArticleCreateRequest:
+    description: Данные, передаваемые для создания статьи.
+    properties:
+      content_en:
+        description: Содержимое статьи на английском
+        type: string
+      content_ru:
+        description: Содержимое статьи на русском
+        type: string
+      title_en:
+        description: Заголовок статьи на английском языке
+        type: string
+      title_ru:
+        description: Заголовок статьи на русском языке
+        type: string
+    required:
+    - content_en
+    - content_ru
+    - title_en
+    - title_ru
+    type: object
+  AuthRequest:
+    description: Данные, передаваемые в json для регистрации.
+    properties:
+      email:
+        description: Электронная почта пользователя
+        example: Dimka228@gmail.com
+        format: email
+        type: string
+      password:
+        description: Пароль пользователя
+        example: "12345678"
+        format: password
+        minLength: 8
+        type: string
+      username:
+        description: Имя пользователя
+        example: Dimka228
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  AuthResponse:
+    description: Данные, которые получает пользователь после регистрации.
+    properties:
+      token:
+        description: Токен для подтверждения регистрации
+        items:
+          type: integer
+        type: array
+      user:
+        $ref: '#/definitions/User'
+    required:
+    - token
+    type: object
+  AuthToken:
+    description: Токен для подтверждения регистрации.
+    properties:
+      token:
+        description: Токен для подтверждения регистрации
+        items:
+          type: integer
+        type: array
+    required:
+    - token
+    type: object
+  CheckRequestRequest:
+    description: описание одной проверки
+    properties:
+      params:
+        additionalProperties: true
+        description: Params параметры проверки
+        type: object
+      type:
+        description: 'Type тип проверки: http|ping|tcp|traceroute|dns'
+        example: http
+        type: string
+    required:
+    - params
+    - type
+    type: object
+  ConfirmationRequest:
+    description: Запрос на подтверждение регистрации.
+    properties:
+      code:
+        description: Код, полученный с email
+        example: "0228"
+        type: string
+      token:
+        description: Токен, который вернул handler register/resend-confirmation
+        example: 89as098ga0998=asdg=+afgk==
+        type: string
+    required:
+    - code
+    - token
+    type: object
+  ForgotPasswordRequest:
+    description: Запрос на восстановление пароля.
+    properties:
+      email:
+        description: Почта, на которую придёт письмо для восстановления пароля
+        type: string
+    required:
+    - email
+    type: object
+  LoginRequest:
+    description: Данные, для входа.
+    properties:
+      email:
+        description: Электронная почта пользователя
+        example: Dimka228@gmail.com
+        format: email
+        type: string
+      password:
+        description: Пароль пользователя
+        example: "12345678"
+        format: password
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  RefreshRequest:
+    description: Запрос, в котор передаёт refresh токен мобильное приложение
+    properties:
+      refreshToken:
+        description: Refresh токен
+        type: string
+    type: object
+  ResendRequest:
+    description: Запрос на переотправку кода подтверждения.
+    properties:
+      email:
+        description: Электронная почта пользователя
+        example: Dimka228@gmail.com
+        format: email
+        type: string
+    required:
+    - email
+    type: object
+  ResetPasswordRequest:
+    description: Запрос на сброс пароля.
+    properties:
+      newPassword:
+        description: Новый пароль
+        type: string
+      token:
+        description: Токен, полученный по ссылке из письма
+        type: string
+    required:
+    - newPassword
+    - token
+    type: object
+  TaskMessageRequest:
+    description: Task для выполнения проверок сети (HTTP, ping, TCP, traceroute, DNS)
+    properties:
+      broadcast:
+        description: Отправлять ли запрос на агенты всех регионов или берётся ближайший
+          1 агент к клиенту
+        example: false
+        type: boolean
+      checks:
+        description: Checks список проверок
+        items:
+          $ref: '#/definitions/CheckRequestRequest'
+        type: array
+      target:
+        description: Target домен или IP, который нужно проверить
+        example: example.com
+        type: string
+      timeoutSeconds:
+        description: TimeoutSeconds время выполнения всех задачи в секундах
+        example: 20
+        type: integer
+    required:
+    - checks
+    - target
+    - timeoutSeconds
+    type: object
+  TokenResponse:
+    description: Ответ, содержащий access и refresh токены
+    properties:
+      accessToken:
+        description: Access токен
+        type: string
+      refreshToken:
+        description: Refresh токен
+        type: string
+    type: object
+  User:
+    description: Модель пользователя, хз что ещё сказать можно по этому поводу.
+    properties:
+      blocked:
+        description: Заблокирован ли пользователь
+        example: false
+        type: boolean
+      confirmed:
+        description: Подтверждён ли пользователь
+        example: true
+        type: boolean
+      createdAt:
+        description: Timestamp создания аккаунта
+        example: "2006-01-02T15:04:05Z"
+        format: date-time
+        type: string
+      deleted:
+        description: Удалён ли пользователь
+        example: true
+        type: boolean
+      email:
+        description: Электронная почта пользователя
+        example: Dimka228@gmail.com
+        type: string
+      id:
+        description: ID пользователя
+        example: b4b03119-1290-44bc-b599-6a5e91d6611f
+        type: string
+      role:
+        description: Роль пользователя
+        example: user
+        type: string
+      updatedAt:
+        description: Timestamp последнего обновления аккаунта
+        example: "2006-01-02T15:04:05Z"
+        format: date-time
+        type: string
+      username:
+        description: Имя пользователя
+        example: Dimka228
+        type: string
+    required:
+    - blocked
+    - confirmed
+    - createdAt
+    - deleted
+    - email
+    - id
+    - role
+    - updatedAt
+    type: object
+  hackathon-back_internal_model.CheckResultResponse:
+    properties:
+      agentId:
+        type: string
+      agentRegion:
+        type: string
+      finishedAt:
+        type: string
+      payload:
+        items:
+          type: integer
+        type: array
+      requestId:
+        type: string
+      startedAt:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+    type: object
+  hackathon-back_internal_model.FAQ:
+    properties:
+      answer:
+        example: Для восстановления пароля используйте форму 'Забыли пароль' на странице
+          входа.
+        type: string
+      category:
+        example: authentication
+        type: string
+      created_at:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+      created_by:
+        example: 1a2b3c4d-5678-90ab-cdef-1234567890ab
+        type: string
+      id:
+        example: 7b2aab2e-4d1f-45b5-90c5-4d5d4db5ef11
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      order:
+        example: 1
+        type: integer
+      question:
+        example: Как восстановить пароль?
+        type: string
+      updated_at:
+        example: "2024-01-15T10:30:00Z"
+        type: string
+    type: object
+  hackathon-back_internal_model.FAQCategoryResponse:
+    properties:
+      category:
+        type: string
+      faqs:
+        items:
+          $ref: '#/definitions/hackathon-back_internal_model.FAQ'
+        type: array
+    type: object
+  hackathon-back_internal_model.FAQCreateRequest:
+    properties:
+      answer:
+        example: Для восстановления пароля используйте форму 'Забыли пароль' на странице
+          входа.
+        type: string
+      category:
+        example: authentication
+        type: string
+      order:
+        example: 1
+        type: integer
+      question:
+        example: Как восстановить пароль?
+        type: string
+    required:
+    - answer
+    - category
+    - question
+    type: object
+  hackathon-back_internal_model.FAQListResponse:
+    properties:
+      faqs:
+        items:
+          $ref: '#/definitions/hackathon-back_internal_model.FAQ'
+        type: array
+      total:
+        type: integer
+    type: object
+  hackathon-back_internal_model.FAQUpdateRequest:
+    properties:
+      answer:
+        example: Используйте кнопку 'Забыли пароль' на странице входа.
+        type: string
+      category:
+        example: auth
+        type: string
+      is_active:
+        example: false
+        type: boolean
+      order:
+        example: 2
+        type: integer
+      question:
+        example: Как сбросить пароль?
+        type: string
+    type: object
+  hackathon-back_internal_model.Request:
+    properties:
+      broadcast:
+        type: boolean
+      checkTypes:
+        items:
+          type: string
+        type: array
+      clientASN:
+        type: integer
+      clientCC:
+        type: string
+      clientIP:
+        type: string
+      clientRegion:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      requestJSON:
+        items:
+          type: integer
+        type: array
+      status:
+        type: string
+      target:
+        type: string
+      timeoutSeconds:
+        type: integer
+      updatedAt:
+        type: string
+      userAgent:
+        type: string
+    type: object
+  hackathon-back_internal_model.SearchResult:
+    properties:
+      article:
+        $ref: '#/definitions/Article'
+      highlight:
+        additionalProperties:
+          items:
+            type: string
+          type: array
+        type: object
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: |-
+    Флоу авторизации: сначала пользователь регистрируется, в ответе получает модельку своего user и токен.
+    Токен + код с почты он отправляет на ручку confirm, если что-то идёт не так (токен истёк, не пришёл код на почту), то запрос нужно отправить на ручку resend-confirmation.
+    Далее уже можно авторизоваться, login/refresh/test-login выставляет в cookie access и refresh токены, фронтенду, ничего с ними делать не нужно, они сами по себе живут в браузере и отправляются при каждом запросе.
+    Специально для мобильного приложения при login/refresh/test-login токены дублируются в теле ответа.
+    При запросе к защищённым ручкам API мобильному приложению необходимо выставить заголовок Authorization: Bearer *access_token*.
+    При refresh мобильное приложение передаёт refresh токен в теле запроса.
+  title: Hackathon API
+  version: 0.1.0
+paths:
+  /article:
+    post:
+      consumes:
+      - application/json
+      description: Создать статью.
+      parameters:
+      - description: Данные для создания статьи
+        in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/ArticleCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/Article'
+              type: object
+        "400":
+          description: Invalid body param
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to get article
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Создать статью.
+      tags:
+      - Articles
+  /article/{article_id}:
+    delete:
+      description: Удалить статью по ID.
+      parameters:
+      - description: Article UUID
+        in: path
+        name: article_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Invalid path param
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Article not found
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to delete article
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Удалить статью.
+      tags:
+      - Articles
+    get:
+      description: Получить статью по ID.
+      parameters:
+      - description: Article UUID
+        in: path
+        name: article_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/Article'
+              type: object
+        "400":
+          description: Invalid path param
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Article not found
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to get article
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Получить статью по ID.
+      tags:
+      - Articles
+    patch:
+      consumes:
+      - application/json
+      description: Частично обновить статью. Некоторые поля могут быть пустыми, обновляются
+        только те, которые не пустые.
+      parameters:
+      - description: Article UUID
+        in: path
+        name: article_id
+        required: true
+        type: string
+      - description: Поля для обновления статьи
+        in: body
+        name: updateArticle
+        required: true
+        schema:
+          $ref: '#/definitions/ArticleCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Invalid path param
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Article not found
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to update article
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Частично обновить статью.
+      tags:
+      - Articles
+  /article/search:
+    get:
+      description: Полнотекстовый поиск по статьям.
+      parameters:
+      - description: Строка поиска
+        in: query
+        name: q
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/hackathon-back_internal_model.SearchResult'
+                  type: array
+              type: object
+        "400":
+          description: Invalid query param
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to get articles
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Поиск статей по содержанию.
+      tags:
+      - Articles
+  /auth/api-key:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт новый API ключ для текущего пользователя. Ключ можно использовать
+        для аутентификации через заголовок `X-API-Key`.
+      parameters:
+      - description: Данные для создания API ключа
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/APIKeyCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ключ успешно создан
+          schema:
+            $ref: '#/definitions/APIKeyCreateResponse'
+        "400":
+          description: Некорректные данные запроса
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Пользователь не авторизован
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Ошибка на стороне сервера
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создание нового API ключа
+      tags:
+      - API Keys
+  /auth/api-key/list:
+    get:
+      description: Возвращает все активные и неотозванные ключи текущего пользователя.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список ключей
+          schema:
+            $ref: '#/definitions/APIKeyListResponse'
+        "401":
+          description: Пользователь не авторизован
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Ошибка на стороне сервера
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех API ключей пользователя
+      tags:
+      - API Keys
+  /auth/api-key/revoke:
+    post:
+      consumes:
+      - application/json
+      description: Делает указанный API ключ недействительным. После этого он не может
+        быть использован для аутентификации.
+      parameters:
+      - description: ID ключа для отзыва
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/APIKeyRevokeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ключ успешно отозван
+        "400":
+          description: Некорректный формат запроса
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Пользователь не авторизован
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Ключ не найден
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Ошибка на стороне сервера
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Отзыв (деактивация) API ключа
+      tags:
+      - API Keys
+  /auth/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Принимает код с почты + временный токен, который вернул handler
+        register/resend-confirmation.
+      parameters:
+      - description: Данные для подтверждения пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/ConfirmationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User confirmed successfully
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Invalid verification code/Token has expired
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Token does not exist
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to confirmation user
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Подтверждение пользователя.
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Принимает почту и пароль, выставляет access и refresh токен в cookie, они автоматически отправляются при каждом запросе к api.
+        Login только подтверждённых пользователей.
+      parameters:
+      - description: Данные для подтверждения входа
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/TokenResponse'
+              type: object
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Invalid credential/User isn't confirmed
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: User does not exist
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to login user
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Login пользователя.
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Аннигиляция access и refresh токена.
+        Для web-клиентов токен автоматически берётся из cookies, затем access и refresh токены сбрасываются.
+        Для мобильного клиента .
+      parameters:
+      - description: Refresh токен (Нужно только при передаче токена из мобильного
+          проложения!)
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logged out
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to logout
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Logout пользователя.
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Получает refresh токен из cookies (Для мобильного приложения нужно
+        передать токен в теле запроса), проверяет его, если он не истёк, то выставляет
+        новые access и refresh токены.
+      parameters:
+      - description: Refresh токен (Нужно только при передаче токена из мобильного
+          проложения!)
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/TokenResponse'
+              type: object
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Refresh token expired
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: User does not exist
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to refresh user
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Refresh jwt токенов.
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Принимает данные об имени, почте, пароле. Далее сохраняет пользователя в бд,
+        отправляет 4-х значный код на почту и возвращает структуру пользователя, токен, который нужен для подтверждения регистрации.
+      parameters:
+      - description: Данные для регистрации пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/AuthResponse'
+              type: object
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to register user
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Регистрация пользователя.
+      tags:
+      - Auth
+  /auth/resend-confirmation:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Генерирует новую пару токен + 4-х значный код, код отправляет на почту,
+        возвращает новый токен, старый аннулируется.
+      parameters:
+      - description: Данные для повторной отправки кода подтверждения
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/ResendRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/AuthToken'
+              type: object
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to resend confirmation
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Повторная отправка токена кода подтверждения.
+      tags:
+      - Auth
+  /auth/test-login:
+    post:
+      description: |-
+        Создаёт пользователя с рандомными данными, выставляет access токен в cookie.
+        Учти, читатель, пользователь здесь не сохраняется в бд, т.е. refresh токен не выставляется и в теле возвращается пустая строка.
+        Из этого можно сделать вывод, что этот логин будет действителен примерно 20 минут.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/TokenResponse'
+              type: object
+        "500":
+          description: Failed to login user
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Тестовый единоразовый вход.
+      tags:
+      - Auth
+  /check/{id}:
+    get:
+      description: Возвращает текущее состояние проверок по request_id одним ответом.
+      parameters:
+      - description: Request UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/hackathon-back_internal_model.CheckResultResponse'
+                  type: array
+              type: object
+        "400":
+          description: Invalid path param
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to get results
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить результаты сетевых проверок.
+      tags:
+      - Checks
+  /check/task:
+    post:
+      consumes:
+      - application/json
+      description: Принимает проверки, достаёт IP клиента, определяет регион, пишет
+        в checks=PENDING и в outbox кладёт.
+      parameters:
+      - description: Task payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TaskMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/hackathon-back_internal_model.Request'
+              type: object
+        "400":
+          description: Invalid JSON body
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Failed to create request
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Создать задачу сетевых проверок.
+      tags:
+      - Checks
+  /check/ws/check/{request_id}:
+    get:
+      description: Открывает WS и присылает актуальные результаты по request_id до
+        завершения всех проверок.
+      parameters:
+      - description: Request UUID
+        in: path
+        name: request_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Стрим результатов сетевых проверок по WebSocket.
+      tags:
+      - Checks
+  /faq:
+    get:
+      description: Возвращает список часто задаваемых вопросов с пагинацией и фильтрацией
+      parameters:
+      - description: Фильтр по категории
+        in: query
+        name: category
+        type: string
+      - description: Фильтр по активности
+        in: query
+        name: is_active
+        type: boolean
+      - default: 50
+        description: Лимит (по умолчанию 50, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Смещение
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список FAQ
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/hackathon-back_internal_model.FAQListResponse'
+              type: object
+        "400":
+          description: Некорректные параметры запроса
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при получении списка FAQ
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить список FAQ
+      tags:
+      - FAQ
+    post:
+      consumes:
+      - application/json
+      description: Создает новый часто задаваемый вопрос
+      parameters:
+      - description: Данные для создания FAQ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/hackathon-back_internal_model.FAQCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: FAQ успешно создан
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/hackathon-back_internal_model.FAQ'
+              type: object
+        "400":
+          description: Некорректные данные
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при создании FAQ
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Создать новый FAQ
+      tags:
+      - FAQ
+  /faq/{id}:
+    delete:
+      description: Удаляет часто задаваемый вопрос
+      parameters:
+      - description: FAQ UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: FAQ успешно удалён
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Неверный параметр пути
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: FAQ не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при удалении FAQ
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Удалить FAQ
+      tags:
+      - FAQ
+    get:
+      description: Возвращает часто задаваемый вопрос по его ID
+      parameters:
+      - description: FAQ UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Данные FAQ
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/hackathon-back_internal_model.FAQ'
+              type: object
+        "400":
+          description: Неверный параметр пути
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: FAQ не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при получении FAQ
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить FAQ по ID
+      tags:
+      - FAQ
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет данные часто задаваемого вопроса
+      parameters:
+      - description: FAQ UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/hackathon-back_internal_model.FAQUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: FAQ успешно обновлён
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Некорректные данные
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: FAQ не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при обновлении FAQ
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Обновить FAQ
+      tags:
+      - FAQ
+  /faq/categories:
+    get:
+      description: Возвращает список всех категорий FAQ
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список категорий
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+        "500":
+          description: Ошибка при получении категорий
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить список категорий
+      tags:
+      - FAQ
+  /faq/category/{category}:
+    get:
+      description: Возвращает активные часто задаваемые вопросы по указанной категории
+      parameters:
+      - description: Категория FAQ
+        in: path
+        name: category
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список FAQ категории
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/hackathon-back_internal_model.FAQ'
+                  type: array
+              type: object
+        "400":
+          description: Неверный параметр пути
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при получении FAQ
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить FAQ по категории
+      tags:
+      - FAQ
+  /faq/grouped:
+    get:
+      description: Возвращает все активные FAQ сгруппированные по категориям
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: FAQ по категориям
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/hackathon-back_internal_model.FAQCategoryResponse'
+                  type: array
+              type: object
+        "500":
+          description: Ошибка при получении данных
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить FAQ по категориям
+      tags:
+      - FAQ
+  /health/ping:
+    get:
+      description: Возвращает “pong”.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Проверка здоровья сервиса.
+      tags:
+      - Health
+  /health/protected/ping:
+    get:
+      description: Возвращает “pong” + uuid пользователя из JWT, который её вызвал.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success + id
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Invalid or missing JWT token
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "403":
+          description: Invalid user data format
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Проверка здоровья сервиса, используя JWT.
+      tags:
+      - Health
+  /user:
+    delete:
+      description: Удаляет аккаунт текущего авторизованного пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Аккаунт успешно удалён
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Пользователь не авторизован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при удалении аккаунта
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Удалить свой аккаунт
+      tags:
+      - User
+    get:
+      description: Получает информацию о текущем авторизованном пользователе. ID берётся
+        из JWT токена.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Данные пользователя
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/User'
+              type: object
+        "401":
+          description: Неверный или отсутствующий токен
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "403":
+          description: Неверный формат данных пользователя
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при получении пользователя
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Получить данные текущего пользователя
+      tags:
+      - User
+  /user/{user_id}:
+    delete:
+      description: Удаляет пользователя по ID. Доступно для пользователей с ролью
+        manager и выше.
+      parameters:
+      - description: User UUID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Пользователь успешно удалён
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Неверный параметр пути
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "403":
+          description: Недостаточно прав
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при удалении пользователя
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Удалить пользователя по ID
+      tags:
+      - User
+    get:
+      description: Получает информацию о пользователе по его ID. Доступно без авторизации.
+      parameters:
+      - description: User UUID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Данные пользователя
+          schema:
+            allOf:
+            - $ref: '#/definitions/_ResponseWithData'
+            - properties:
+                data:
+                  $ref: '#/definitions/User'
+              type: object
+        "400":
+          description: Неверный параметр пути
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при получении пользователя
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Получить пользователя по ID
+      tags:
+      - User
+  /user/block/{user_id}:
+    post:
+      description: Блокирует пользователя по ID. Доступно для пользователей с ролью
+        manager и выше.
+      parameters:
+      - description: User UUID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Пользователь успешно заблокирован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Неверный параметр пути
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "403":
+          description: Недостаточно прав
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "404":
+          description: Пользователь не найден
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка при блокировке пользователя
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Заблокировать пользователя по ID
+      tags:
+      - User
+  /user/password-forgot:
+    post:
+      consumes:
+      - application/json
+      description: Отправляет письмо со ссылкой для восстановления пароля на указанный
+        email
+      parameters:
+      - description: Email пользователя
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ссылка для сброса пароля отправлена на email
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Некорректный запрос
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      summary: Запрос сброса пароля
+      tags:
+      - User
+  /user/password-reset:
+    post:
+      consumes:
+      - application/json
+      description: Сбрасывает пароль пользователя по токену. После успешной смены
+        токен становится недействительным.
+      parameters:
+      - description: Данные для сброса пароля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Пароль успешно изменён
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "400":
+          description: Некорректные данные
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+        "500":
+          description: Ошибка сервера
+          schema:
+            $ref: '#/definitions/_ResponseWithMessage'
+      security:
+      - AccessToken: []
+      - RefreshToken: []
+      summary: Сброс пароля
+      tags:
+      - User
+swagger: "2.0"

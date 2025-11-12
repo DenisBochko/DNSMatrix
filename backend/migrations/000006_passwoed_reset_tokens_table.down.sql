@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS sso.password_reset_tokens
