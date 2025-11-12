@@ -108,77 +108,71 @@ services:
       timeout: 10s
       retries: 10
 
-#  agent-cluster-apac:
-#    build:
-#      context: "./agent"
-#      dockerfile: Dockerfile
-#    environment:
-#      APP_AGENT_ID: "6d40a8b9-a135-4b67-b96b-0579c6ae0f76"
-#      APP_REGION: "APAC"
-#      SUBSCRIBER_BROKERS: "hackathon-broker:29092"
-#      SUBSCRIBER_GROUP_ID: "APAC"
-#      SUBSCRIBER_TOPIC: "hosts-check-APAC"
-#      SUBSCRIBER_BUFFER_SIZE: "1000"
-#      PUBLISHER_BROKERS: "hackathon-broker:29092"
-#      PUBLISHER_TOPIC: "hosts-checked"
-#    depends_on:
-#      broker:
-#        condition: service_healthy
-#    deploy:
-#      replicas: 3
-#    networks:
-#      - shared
-#    cap_add:
-#      - NET_RAW
-#      - NET_ADMIN
-#
-#  agent-cluster-eu:
-#    build:
-#      context: "./agent"
-#      dockerfile: Dockerfile
-#    environment:
-#      APP_AGENT_ID: "1832f867-3295-4cb5-8b9d-f34fe8723560"
-#      APP_REGION: "EU"
-#      SUBSCRIBER_BROKERS: "hackathon-broker:29092"
-#      SUBSCRIBER_GROUP_ID: "EU"
-#      SUBSCRIBER_TOPIC: "hosts-check-EU"
-#      SUBSCRIBER_BUFFER_SIZE: "1000"
-#      PUBLISHER_BROKERS: "hackathon-broker:29092"
-#      PUBLISHER_TOPIC: "hosts-checked"
-#    depends_on:
-#      broker:
-#        condition: service_healthy
-#    deploy:
-#      replicas: 3
-#    networks:
-#      - shared
-#    cap_add:
-#      - NET_RAW
-#      - NET_ADMIN
-#
-#  agent-cluster-us:
-#    build:
-#      context: "./agent"
-#      dockerfile: Dockerfile
-#    environment:
-#      APP_AGENT_ID: "f022e955-1dff-4cf0-979a-80b118fa1126"
-#      APP_REGION: "US"
-#      SUBSCRIBER_BROKERS: "hackathon-broker:29092"
-#      SUBSCRIBER_GROUP_ID: "US"
-#      SUBSCRIBER_TOPIC: "hosts-check-US"
-#      SUBSCRIBER_BUFFER_SIZE: "1000"
-#      PUBLISHER_BROKERS: "hackathon-broker:29092"
-#      PUBLISHER_TOPIC: "hosts-checked"
-#    depends_on:
-#      broker:
-#        condition: service_healthy
-#    deploy:
-#      replicas: 3
-#    networks:
-#      - shared
-#    cap_add:
-#      - NET_RAW
-#      - NET_ADMIN
+  agent-cluster-apac:
+    build:
+      context: "./agent"
+      dockerfile: Dockerfile
+    environment:
+      APP_AGENT_ID: "6d40a8b9-a135-4b67-b96b-0579c6ae0f76"
+      APP_REGION: "APAC"
+      SUBSCRIBER_BROKERS: "hackathon-broker:29092"
+      SUBSCRIBER_GROUP_ID: "APAC"
+      SUBSCRIBER_TOPIC: "hosts-check-APAC"
+      SUBSCRIBER_BUFFER_SIZE: "1000"
+      PUBLISHER_BROKERS: "hackathon-broker:29092"
+      PUBLISHER_TOPIC: "hosts-checked"
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - shared
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+
+  agent-cluster-eu:
+    build:
+      context: "./agent"
+      dockerfile: Dockerfile
+    environment:
+      APP_AGENT_ID: "1832f867-3295-4cb5-8b9d-f34fe8723560"
+      APP_REGION: "EU"
+      SUBSCRIBER_BROKERS: "hackathon-broker:29092"
+      SUBSCRIBER_GROUP_ID: "EU"
+      SUBSCRIBER_TOPIC: "hosts-check-EU"
+      SUBSCRIBER_BUFFER_SIZE: "1000"
+      PUBLISHER_BROKERS: "hackathon-broker:29092"
+      PUBLISHER_TOPIC: "hosts-checked"
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - shared
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+
+  agent-cluster-us:
+    build:
+      context: "./agent"
+      dockerfile: Dockerfile
+    environment:
+      APP_AGENT_ID: "f022e955-1dff-4cf0-979a-80b118fa1126"
+      APP_REGION: "US"
+      SUBSCRIBER_BROKERS: "hackathon-broker:29092"
+      SUBSCRIBER_GROUP_ID: "US"
+      SUBSCRIBER_TOPIC: "hosts-check-US"
+      SUBSCRIBER_BUFFER_SIZE: "1000"
+      PUBLISHER_BROKERS: "hackathon-broker:29092"
+      PUBLISHER_TOPIC: "hosts-checked"
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - shared
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
 
   hackathon-back:
     build:
